@@ -8,10 +8,10 @@ let mSymbol : symbol = 'm'
 let wSymbol : symbol = 'w'
 let eSymbol : symbol = ' '
 let rnd = System.Random ()
-
+ 
 /// An animal is a base class. It has a position and a reproduction counter.
 type animal (symb : symbol, repLen : int) =
-  let mutable _reproduction = rnd.Next(1,repLen)
+  let mutable _reproduction = rnd.Next(1,repLen) // repLen is Reproduction length 
   let mutable _pos : position option = None
   let _symbol : symbol = symb
 
@@ -35,7 +35,7 @@ type moose (repLen : int) =
     None // Intentionally left blank. Insert code that updates the moose's age and optionally an offspring.
 
 /// A wolf is an animal with a hunger counter
-type wolf (repLen : int, hungLen : int) =
+type wolf (repLen : int, hungLen : int) = // hungLen is its hunger counter 
   inherit animal (wSymbol, repLen)
   let mutable _hunger = hungLen
 
