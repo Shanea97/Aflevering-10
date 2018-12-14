@@ -48,14 +48,24 @@ let NewAnimal = animal(mSymbol, 15)
 
 type moose (repLen : int) =
     inherit animal (mSymbol, repLen)
-
     member this.tick () : moose option = /// if repLen =  0 then make new moose calf 
         base.updateReproduction()
         if base.reproduction = 0 then 
             base.resetReproduction()
-            Some (moose(rnd.Next(1,20)))
+            Some (moose(repLen))
         else
             None
 
-let NewMoose = moose(15)
-printfn "NewMoose tick: %A" NewMoose.tick
+let NewMoose = moose(5)
+printfn "NewMoose Symbol: %A" NewMoose.symbol
+printfn "NewMoose RepProduction: %A" NewMoose.reproduction
+printfn "NewMoose tick: %A" (NewMoose.tick ())
+printfn "NewMoose RepProduction: %A" NewMoose.reproduction
+printfn "NewMoose tick: %A" (NewMoose.tick ())
+printfn "NewMoose RepProduction: %A" NewMoose.reproduction
+printfn "NewMoose tick: %A" (NewMoose.tick ())
+printfn "NewMoose RepProduction: %A" NewMoose.reproduction
+printfn "NewMoose tick: %A" (NewMoose.tick ())
+printfn "NewMoose RepProduction: %A" NewMoose.reproduction
+printfn "NewMoose tick: %A" (NewMoose.tick ())
+printfn "NewMoose RepProduction: %A" NewMoose.reproduction

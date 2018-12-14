@@ -29,13 +29,17 @@ type animal (symb : symbol, repLen : int) =
 
 /// A moose is an animal
 type moose (repLen : int) =
-  inherit animal (mSymbol, repLen)
-
-  member this.tick () : moose option =
-    None // Intentionally left blank. Insert code that updates the moose's age and optionally an offspring.
+    inherit animal (mSymbol, repLen)
+    member this.tick () : moose option = /// if repLen =  0 then make new moose calf 
+        base.updateReproduction()
+        if base.reproduction = 0 then 
+            base.resetReproduction()
+            Some (moose(repLen))
+        else
+            None // Intentionally left blank. Insert code that updates the moose's age and optionally an offspring.
 
 /// A wolf is an animal with a hunger counter
-type wolf (repLen : int, hungLen : int) = // hungLen is its hunger counter 
+type wolf (repLen : int, hungLen : int) = // hungLen is its hunger counter
   inherit animal (wSymbol, repLen)
   let mutable _hunger = hungLen
 
@@ -47,7 +51,13 @@ type wolf (repLen : int, hungLen : int) = // hungLen is its hunger counter
   member this.resetHunger () =
     _hunger <- hungLen
   member this.tick () : wolf option =
-    None // Intentionally left blank. Insert code that updates the wolf's age and optionally an offspring.
+    base.updateReproduction()
+    this.updateHunger()
+    if base.reproduction = 0 then
+      base.resetReproduction()
+      Some (wolf(repLen, hungLen))
+    else
+        None // Intentionally left blank. Insert code that updates the wolf's age and optionally an offspring.
 
 /// A board is a chess-like board implicitly representedy by its width and coordinates of the animals.
 type board =
