@@ -111,7 +111,10 @@ type environment (boardWidth : int, NMooses : int, mooseRepLen : int, NWolves : 
   member this.count = _board.moose.Length + _board.wolves.Length
   member this.board = _board
   member this.tick () =
-    () // Intentionally left blank. Insert code that process animals here.
+
+    moose.tick ()
+    wolves.tick ()
+
   override this.ToString () =
     let arr = draw _board
     let mutable ret = "  "
