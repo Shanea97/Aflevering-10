@@ -155,3 +155,5 @@ type environment (boardWidth : int, NMooses : int, mooseRepLen : int, NWolves : 
     ret
 
 // ikke testet do environment (10, 10, 6, 10, 6, 4, true) // nogen der gider?
+
+
