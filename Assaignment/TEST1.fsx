@@ -121,9 +121,25 @@ type environment (boardWidth : int, NMooses : int, mooseRepLen : int, NWolves : 
   member this.count = _board.moose.Length + _board.wolves.Length
   member this.board = _board
   member this.tick () =
+    for i = 0 to boardWidth do
+      match _board.moose.[i].tick () with
+        | Some (moose) ->
+          if not _board.moose.[i].position.IsSome then
+            moose.position <- Some (fst (_board.moose.[i].position.Value) + 1, snd (_board.moose.[i].position.Value) + 1)
+            _board.moose <- moose  :: _board.moose
+        | None ->
+          if _board.wolves.[i].position = _board.moose.[i].position then
+            _board.moose.[i].position <- None
+          else
+            _board.moose.[i].position <- Some (fst (_board.moose.[i].position.Value) + 1, snd (_board.moose.[i].position.Value) + 1)
 
-    moose.tick ()
-    wolves.tick ()
+      match _board.wolves.[i].tick () with
+        | Some (wolf) ->
+          if not _board.wolves.[i].position.IsSome then
+            wolf.position <- Some (fst (_board.wolves.[i].position.Value) + 1, snd (_board.wolves.[i].position.Value) + 1)
+            _board.wolves <- wolf :: _board.wolves
+        | None ->
+          _board.wolves.[i].position <- Some (fst (_board.wolves.[i].position.Value) + 1, snd (_board.wolves.[i].position.Value) + 1)
 
   override this.ToString () =
     let arr = draw _board
@@ -137,3 +153,5 @@ type environment (boardWidth : int, NMooses : int, mooseRepLen : int, NWolves : 
         ret <- ret + string arr.[i,j] + " "
       ret <- ret + "\n"
     ret
+
+// ikke testet do environment (10, 10, 6, 10, 6, 4, true) // nogen der gider?
