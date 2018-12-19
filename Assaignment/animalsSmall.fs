@@ -1,4 +1,4 @@
-module animals
+module Animals
 
 type symbol = char
 type position = int * int
@@ -8,10 +8,10 @@ let mSymbol : symbol = 'm'
 let wSymbol : symbol = 'w'
 let eSymbol : symbol = ' '
 let rnd = System.Random ()
- 
+
 /// An animal is a base class. It has a position and a reproduction counter.
 type animal (symb : symbol, repLen : int) =
-  let mutable _reproduction = rnd.Next(1,repLen) // repLen is Reproduction length 
+  let mutable _reproduction = rnd.Next(1,repLen) // repLen is Reproduction length
   let mutable _pos : position option = None
   let _symbol : symbol = symb
 
@@ -27,16 +27,18 @@ type animal (symb : symbol, repLen : int) =
   override this.ToString () =
     string this.symbol
 
+
 /// A moose is an animal
 type moose (repLen : int) =
     inherit animal (mSymbol, repLen)
-    member this.tick () : moose option = /// if repLen =  0 then make new moose calf 
+
+    member this.tick () : moose option = /// if repLen =  0 then make new moose calf
         base.updateReproduction()
-        if base.reproduction = 0 then 
+        if base.reproduction = 0 then
             base.resetReproduction()
             Some (moose(repLen))
         else
-            None // Intentionally left blank. Insert code that updates the moose's age and optionally an offspring.
+            None
 
 /// A wolf is an animal with a hunger counter
 type wolf (repLen : int, hungLen : int) = // hungLen is its hunger counter
@@ -57,7 +59,7 @@ type wolf (repLen : int, hungLen : int) = // hungLen is its hunger counter
       base.resetReproduction()
       Some (wolf(repLen, hungLen))
     else
-        None // Intentionally left blank. Insert code that updates the wolf's age and optionally an offspring.
+        None
 
 /// A board is a chess-like board implicitly representedy by its width and coordinates of the animals.
 type board =
@@ -101,8 +103,33 @@ type environment (boardWidth : int, NMooses : int, mooseRepLen : int, NWolves : 
   member this.size = boardWidth*boardWidth
   member this.count = _board.moose.Length + _board.wolves.Length
   member this.board = _board
-  member this.tick () = 
-    () // Intentionally left blank. Insert code that process animals here.
+  member this.tick () =
+    printfn "start på tick"
+    for i = 0 to boardWidth do
+      match _board.moose.[i].tick () with
+        | Some (moose) ->
+          printfn "start på match"
+          if not _board.moose.[i].position.IsSome then
+            moose.position <- Some (fst (_board.moose.[i].position.Value) + 1, snd (_board.moose.[i].position.Value) + 1)
+            _board.moose <- moose  :: _board.moose
+        | None ->
+          printfn "slut på match"
+          if _board.wolves.[i].position = _board.moose.[i].position then
+            _board.moose.[i].position <- None
+          else
+            _board.moose.[i].position <- Some (fst (_board.moose.[i].position.Value) + 1, snd (_board.moose.[i].position.Value) + 1)
+
+      match _board.wolves.[i].tick () with
+        | Some (wolf) ->
+          printfn "start på match2"
+          if not _board.wolves.[i].position.IsSome then
+            printfn "slut på match2"
+            wolf.position <- Some (fst (_board.wolves.[i].position.Value) + 1, snd (_board.wolves.[i].position.Value) + 1)
+            _board.wolves <- wolf :: _board.wolves
+        | None ->
+
+          _board.wolves.[i].position <- Some (fst (_board.wolves.[i].position.Value) + 1, snd (_board.wolves.[i].position.Value) + 1)
+    printfn "slut på tick"
   override this.ToString () =
     let arr = draw _board
     let mutable ret = "  "

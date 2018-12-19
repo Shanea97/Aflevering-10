@@ -1,7 +1,7 @@
 /// A simulator for animals in a closed environment. Presently, two animals are implemented: moose and wolves as prey and preditor.
-module animals
+module Animals
 /// A symbol to print an animal on a board
-type symbol = char 
+type symbol = char
 /// A position on a board
 type position = int * int
 /// Base class for all animals. An animal has a position, age and a time to reproduce.
