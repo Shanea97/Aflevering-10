@@ -98,6 +98,8 @@ type environment (boardWidth : int, NMooses : int, mooseRepLen : int, NWolves : 
        m.position <- Some (anyEmptyField _board)
   do for w in _board.wolves do
        w.position <- Some (anyEmptyField _board)
+  
+
 
   member this.size = boardWidth*boardWidth
   member this.count = _board.moose.Length + _board.wolves.Length
@@ -125,6 +127,13 @@ type environment (boardWidth : int, NMooses : int, mooseRepLen : int, NWolves : 
             newWolf.position <- Some (anyEmptyField _board)
             _board.wolves <- _board.wolves @ [newWolf]
         _board.wolves.[j].position <- Some (anyEmptyField _board)
+        
+        // // else 
+        // //     for x = 0 to _board.moose.Length-1 do 
+        // //     let WolfPos = _board.wolves.[j].position
+        // //     let MoosePos = _board.moose.[x].position
+        //      let Distance = int(float(sqrt((fst MoosePos-fst WolfPos)**2)+((snd MoosePos-snd WolfPos)**2)))
+        //      Distance
 
         
 
@@ -157,4 +166,4 @@ for i = 0 to 10 do
   for j = 0 to NewEnvironment.board.moose.Length-1 do   
     printfn "Moose %i's RepLen: %A\nMoose %i's position: %A" j NewEnvironment.board.moose.[j].reproduction  j NewEnvironment.board.moose.[j].position
   for x = 0 to NewEnvironment.board.wolves.Length-1 do 
-    printfn "Wolf %i's RepLen: %A" x NewEnvironment.board.wolves.[x].reproduction
+    printfn "Wolf %i's RepLen: %A\nWolf %i's position: %A" x NewEnvironment.board.wolves.[x].reproduction x NewEnvironment.board.wolves.[x].position

@@ -64,10 +64,10 @@ type wolf (repLen : int, hungLen : int) = // hungLen is its hunger counter
 
 let AplhaMoose = moose(5)
 let mutable MooseList = [AplhaMoose]
-for i = 0 to 25 do 
+for i = 0 to  do 
   for j = 0 to MooseList.Length-1 do 
     MooseList.[j].tick()
-    // printfn "Moose %i's RepLen: %A" j MooseList.[j].reproduction
+    printfn "Moose %i's RepLen: %A" j MooseList.[j].reproduction
     if MooseList.[j].reproduction = 1 then 
       MooseList <- moose(5) :: MooseList
   printfn "MooseList: %A" MooseList
