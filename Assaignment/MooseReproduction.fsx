@@ -109,7 +109,9 @@ type environment (boardWidth : int, NMooses : int, mooseRepLen : int, NWolves : 
         _board.moose.[i].tick()
         if _board.moose.[i].reproduction = 1 then 
             _board.moose.[i].position <- Some (anyEmptyField _board)
-            _board.moose <- moose(mooseRepLen) :: _board.moose
+            let newmoose = moose(mooseRepLen)
+            newmoose.position <- Some (anyEmptyField _board)
+            _board.moose <- _board.moose @ [newmoose] 
 
     
     
@@ -148,4 +150,5 @@ for i = 0 to 10 do
   NewEnvironment.tick()
   printfn "%s" (NewEnvironment.ToString())
   for j = 0 to NewEnvironment.board.moose.Length-1 do 
+  
     printfn "Moose %i's RepLen: %A" j NewEnvironment.board.moose.[j].reproduction
