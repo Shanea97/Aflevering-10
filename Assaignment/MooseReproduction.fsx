@@ -106,17 +106,15 @@ type environment (boardWidth : int, NMooses : int, mooseRepLen : int, NWolves : 
     //printfn "start på tick"
     _board.wolves <- _board.wolves |> List.filter (fun x -> x.hunger > 0) // Fjerne ulve fra listen som har sult 0 
     for i = 0 to _board.moose.Length - 1 do
+        _board.moose.[i].tick()
+        if _board.moose.[i].reproduction = 1 then 
+            _board.moose.[i].position <- Some (anyEmptyField _board)
+            _board.moose <- moose(mooseRepLen) :: _board.moose
 
-      match _board.moose.[i].tick () with
-        | Some (moose) ->
-          //printfn "start på match"
-          if not _board.moose.[i].position.IsSome then
-            // let findEmptyN (BM:_board.moose) (BW:_board.wolf)  _board.moose.[i] 
-            moose.position <- Some (anyEmptyField _board)
-            _board.moose <- moose  :: _board.moose
-        | None ->
-          //printfn "slut på match"
-          _board.moose.[i].position <- Some (anyEmptyField _board)
+    
+    
+    
+    
     for i = 0 to _board.wolves.Length - 1 do
       match _board.wolves.[i].tick () with
         | Some (wolf) ->
@@ -145,14 +143,9 @@ type environment (boardWidth : int, NMooses : int, mooseRepLen : int, NWolves : 
     ret
 
 let NewEnvironment = environment(10, 2, 10, 1, 10, 5, true)
-printfn "Board %A" NewEnvironment.board
-printfn "Board %A" NewEnvironment.count
-printfn "%A" (NewEnvironment.ToString())
-//NewEnvironment.tick()
-printfn "Board %s" (NewEnvironment.ToString())
-// printfn "Board Moose: %A" NewEnvironment.board.moose
+
 for i = 0 to 10 do
   NewEnvironment.tick()
-  printfn "Board\n %s" (NewEnvironment.ToString())
+  printfn "%s" (NewEnvironment.ToString())
   for j = 0 to NewEnvironment.board.moose.Length-1 do 
-    printfn "Moose RepLen: %A" NewEnvironment.board.moose.[j].reproduction
+    printfn "Moose %i's RepLen: %A" j NewEnvironment.board.moose.[j].reproduction
