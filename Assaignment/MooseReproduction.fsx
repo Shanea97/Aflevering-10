@@ -103,7 +103,6 @@ type environment (boardWidth : int, NMooses : int, mooseRepLen : int, NWolves : 
   member this.count = _board.moose.Length + _board.wolves.Length
   member this.board = _board
   member this.tick () =
-    //printfn "start på tick"
     _board.wolves <- _board.wolves |> List.filter (fun x -> x.hunger > 0) // Fjerne ulve fra listen som har sult 0 
     for i = 0 to _board.moose.Length - 1 do
         _board.moose.[i].tick()
@@ -117,19 +116,22 @@ type environment (boardWidth : int, NMooses : int, mooseRepLen : int, NWolves : 
     
     
     
-    for i = 0 to _board.wolves.Length - 1 do
-      match _board.wolves.[i].tick () with
-        | Some (wolf) ->
-          //printfn "start på match2"
-          if not _board.wolves.[i].position.IsSome then
-           // printfn "slut på match2"
-            wolf.position <- Some (anyEmptyField _board)
-            _board.wolves <- wolf :: _board.wolves
-        | None ->
-          // if (_board.wolves.[i]._hunger = 0) then
-          
-          _board.wolves.[i].position <- Some (anyEmptyField _board)
-    //printfn "slut på tick"
+    for j = 0 to _board.wolves.Length - 1 do
+        _board.wolves.[j].tick ()
+        if _board.wolves.[j].reproduction = 1 then
+            _board.wolves.[j].position <- Some (anyEmptyField _board)
+            let newWolf = wolf(wolvesRepLen,wolvesHungLen)
+            newWolf.position <- Some (anyEmptyField _board)
+            _board.wolves <- _board.wolves @ [newWolf]
+        
+
+    //   match _board.wolves.[i].tick () with
+    //     | Some (wolf) ->
+    //       if not _board.wolves.[i].position.IsSome then
+    //         wolf.position <- Some (anyEmptyField _board)
+    //         _board.wolves <- wolf :: _board.wolves
+    //     | None ->          
+    //       _board.wolves.[i].position <- Some (anyEmptyField _board)
   
   override this.ToString () =
     let arr = draw _board
@@ -144,11 +146,12 @@ type environment (boardWidth : int, NMooses : int, mooseRepLen : int, NWolves : 
       ret <- ret + "\n"
     ret
 
-let NewEnvironment = environment(10, 2, 10, 1, 10, 5, true)
+let NewEnvironment = environment(10, 2, 10, 1, 10, 8, true)
 
 for i = 0 to 10 do
   NewEnvironment.tick()
   printfn "%s" (NewEnvironment.ToString())
-  for j = 0 to NewEnvironment.board.moose.Length-1 do 
-  
-    printfn "Moose %i's RepLen: %A" j NewEnvironment.board.moose.[j].reproduction
+  for j = 0 to NewEnvironment.board.moose.Length-1 do   
+    printfn "Moose %i's RepLen: %A" j NewEnvironment.board.moose.[j].reproduction 
+  for x = 0 to NewEnvironment.board.wolves.Length-1 do 
+    printfn "Wolf %i's RepLen: %A" x NewEnvironment.board.wolves.[x].reproduction
