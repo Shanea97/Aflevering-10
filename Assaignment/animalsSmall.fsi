@@ -82,6 +82,8 @@ type environment =
     /// The number of animals on the board.
     member count : int
     /// The positions on the board.
+    member moosecount : int
+    member wolfcount : int
     member size : int
     /// Perform a tick by performing all animal's ticks in random order. Animals perform the following actions: Calves and cubs are added if there is room in a neighbouring position. Wolves eat a random Moose in a neighbouring position. If animals do not give birth, eat or are eaten, then they move to an available neighbouring position.
     member tick : unit -> unit
