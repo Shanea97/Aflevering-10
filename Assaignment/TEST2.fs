@@ -30,15 +30,15 @@ type animal (symb : symbol, repLen : int) =
 
 /// A moose is an animal
 type moose (repLen : int) =
-    inherit animal (mSymbol, repLen)
+  inherit animal (mSymbol, repLen)
 
-    member this.tick () : moose option = /// if repLen =  0 then make new moose calf
-        base.updateReproduction()
-        if base.reproduction = 0 then
-            base.resetReproduction()
-            Some (moose(repLen))
-        else
-            None
+  member this.tick () : moose option = /// if repLen =  0 then make new moose calf
+    base.updateReproduction()
+    if base.reproduction = 0 then
+      base.resetReproduction()
+      Some (moose(repLen))
+    else
+      None
 
 /// A wolf is an animal with a hunger counter
 type wolf (repLen : int, hungLen : int) = // hungLen is its hunger counter

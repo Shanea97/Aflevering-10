@@ -136,25 +136,61 @@ type environment (boardWidth : int, NMooses : int, mooseRepLen : int, NWolves : 
   member this.count = _board.moose.Length + _board.wolves.Length
   member this.board = _board
   member this.tick () =
-    for i = 0 to boardWidth do
+
+    _board.wolves <- _board.wolves |> List.filter (fun x -> x.hunger > 0) // Fjerner ulve fra listen som har sult 0
+
+    _board.moose <- _board.moose |> List.filter (fun x -> x.position = None) // Fjerner elge fra listen som har position None
+
+
+    for i = 0 to _board.moose.Length - 1 do
+
       match _board.moose.[i].tick () with
         | Some (moose) ->
           if not _board.moose.[i].position.IsSome then
-            moose.position <- Some (fst (_board.moose.[i].position.Value) + 1, snd (_board.moose.[i].position.Value) + 1)
+            moose.position <- Some (anyEmptyField _board)
             _board.moose <- moose  :: _board.moose
         | None ->
-          if _board.wolves.[i].position = _board.moose.[i].position then
-            _board.moose.[i].position <- None
-          else
-            _board.moose.[i].position <- Some (fst (_board.moose.[i].position.Value) + 1, snd (_board.moose.[i].position.Value) + 1)
+          _board.moose.[i].position <- Some (anyEmptyField _board)
 
+    for i = 0 to _board.wolves.Length - 1 do
       match _board.wolves.[i].tick () with
         | Some (wolf) ->
           if not _board.wolves.[i].position.IsSome then
-            wolf.position <- Some (fst (_board.wolves.[i].position.Value) + 1, snd (_board.wolves.[i].position.Value) + 1)
+            wolf.position <- Some (anyEmptyField _board)
             _board.wolves <- wolf :: _board.wolves
         | None ->
-          _board.wolves.[i].position <- Some (fst (_board.wolves.[i].position.Value) + 1, snd (_board.wolves.[i].position.Value) + 1)
+          // if (_board.wolves.[i]._hunger = 0) then
+          _board.wolves.[i].position <- Some (anyEmptyField _board)
+
+    for i = 0 to _board.moose.Length - 1 do
+      for j = 0 to _board.wolves.Length - 1 do
+        // tjek for ulv til venstre
+        if (fst _board.wolves.[j].position.Value + 1, snd _board.wolves.[j].position.Value) = _board.moose.[j].position.Value
+        then
+        //elg spises
+          _board.wolves.[j].position <- Some (_board.moose.[i].position.Value)
+          _board.wolves.[j].resetHunger ()
+          _board.moose.[i].position <- None
+        //ulv til højre
+        elif (fst _board.wolves.[j].position.Value - 1, snd _board.wolves.[j].position.Value) = _board.moose.[j].position.Value then
+          _board.wolves.[j].position <- Some (_board.moose.[i].position.Value)
+          _board.wolves.[j].resetHunger ()
+          _board.moose.[i].position <- None
+        //ulv nedenfor
+        elif (fst _board.wolves.[j].position.Value, snd _board.wolves.[j].position.Value + 1) = _board.moose.[j].position.Value then
+          _board.wolves.[j].position <- Some (_board.moose.[i].position.Value)
+          _board.wolves.[j].resetHunger ()
+          _board.moose.[i].position <- None
+        //ulv ovenfor
+        elif (fst _board.wolves.[j].position.Value, snd _board.wolves.[j].position.Value - 1) = _board.moose.[j].position.Value then
+          _board.wolves.[j].position <- Some (_board.moose.[i].position.Value)
+          _board.wolves.[j].resetHunger ()
+          _board.moose.[i].position <- None
+
+
+
+
+
 
   override this.ToString () =
     let arr = draw _board
