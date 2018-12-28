@@ -112,7 +112,6 @@ type environment (boardWidth : int, NMooses : int, mooseRepLen : int, NWolves : 
 
 
     for i = 0 to _board.moose.Length - 1 do
-
       match _board.moose.[i].tick () with
         | Some (moose) ->
           if not _board.moose.[i].position.IsSome then
