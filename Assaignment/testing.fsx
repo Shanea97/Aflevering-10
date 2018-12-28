@@ -25,7 +25,6 @@ type animal (symb : symbol, repLen : int) =
   override this.ToString () =
     string this.symbol
 
-
 /// A moose is an animal
 type moose (repLen : int) =
     inherit animal (mSymbol, repLen)
