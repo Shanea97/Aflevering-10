@@ -27,18 +27,36 @@ type animal (symb : symbol, repLen : int) =
 
 /// A moose is an animal
 type moose (repLen : int) =
-    inherit animal (mSymbol, repLen)
+  inherit animal (mSymbol, repLen)
 
-    member this.tick () : moose option = /// if repLen =  0 then make new moose calf
-        base.updateReproduction()
-        if base.reproduction = 0 then
-            base.resetReproduction()
-            Some (moose(repLen))
-        else
-            None
+  member this.tick () : moose option = /// if repLen =  0 then make new moose calf
+    base.updateReproduction()
+    if base.reproduction = 0 then
+        base.resetReproduction()
+        Some (moose(repLen))
+    else
+        None
 
-printfn "Test af Moose, repLen 5"
-let testMoose = moose (5)
+printfn "White-Box Test for decrease of repLen for moose"
+let a = moose (5)
+printfn "With the following input for moose: \nrepLen: %i" 5
+printfn "Does the repLen for the moose decrease? %b\n" (a.reproduction<5) //expected output true 
+
+printfn "White-Box Test for reset repLen for moose"
+let a1 = moose (3)
+a1.resetReproduction()
+printfn "With the following input for moose: \nrepLen: %i" 3
+printfn "Does repLen for the moose reset to the initial repLen with resetReproduction? %b\n" (a1.reproduction=3) //expected output true 
+(*
+printfn "White-Box Test for reproduction of new moose"
+let a2 = moose (0)
+printfn "With the following input for moose: \nrepLen: %i" 0
+printfn "Does repLen for the moose reset to the initial repLen with resetReproduction? %b\n" (a2 =  ) //expected output true 
+*)
+
+
+printfn "Test af Moose, repLen 4"
+let testMoose = moose (4)
 printfn "reproduction: %A" (testMoose.reproduction)
 testMoose.updateReproduction ()
 printfn "updateReproduction: %A" (testMoose.reproduction)
@@ -70,6 +88,25 @@ type wolf (repLen : int, hungLen : int) = // hungLen is its hunger counter
       Some (wolf(repLen, hungLen))
     else
         None
+
+printfn "White-Box Test for decrease of repLen for wolf"
+let b = wolf (5,6)
+printfn "With the following input for wolf: \nrepLen: %i \n hungLen: %i" 5 6 
+printfn "Does repLen for the wolf decrease? %b\n" (b.reproduction<5) //expected output true 
+
+printfn "White-Box Test for reset repLen for wolf"
+let b1 = wolf (7,4)
+b1.resetReproduction()
+printfn "With the following input for wolf: \nrepLen: %i \n hungLen: %i" 7 4 
+printfn "Does repLen for the wolf reset to the initial repLen with resetReproduction? %b\n" (b1.reproduction=7) //expected output true 
+
+(*
+printfn "White-Box Test for reproduction of new wolf"
+let b2 = wolf (0,6)
+b2.reproduction
+printfn "With the following input for wolf: \nrepLen: %i \n hungLen: %i" 0 6 
+printfn "Does repLen for the wolf reset to the initial repLen with resetReproduction? %b\n" () //expected output true 
+*)
 
 let newWolf = wolf (5,6)
 printfn "Hunger: %A" (newWolf.hunger)
