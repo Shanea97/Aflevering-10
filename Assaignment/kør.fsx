@@ -13,12 +13,21 @@ let main args  =
     let wolvesRepLen = int(args.[6]) //f_ulv
     let wolvesHungLen = int(args.[7]) //sulttid
     let env = environment (boardWidth, NMooses, mooseRepLen, NWolves, wolvesRepLen, wolvesRepLen, true)
+    ///vi skriver data ud i csv.format
     let writer = System.IO.File.CreateText navn
+    writer.Write "Samlet antal dyr,"
+    writer.Write "Ulve,"
+    writer.Write "Elge,"
+    writer.Write "Ticks\n"
     for i = 1 to time do
       env.tick()
       writer.Write (env.count)
-      writer.Write ";" // ; bruges så, der det bliver csv
+      writer.Write ","
+      writer.Write (env.wolfcount)
+      writer.Write ","
+      writer.Write (env.moosecount)
+      writer.Write ","
       writer.Write (i)
-      writer.Write ";"
+      writer.Write "\n"
     writer.Close ()
     0 //succesindikator for funktion
