@@ -74,7 +74,26 @@ let Distance (W:wolf) (M:moose)  =
 let Wolf = wolf(5,5)
 let Moose = moose(7)
 let WP = Wolf.position <- Some  (1,5)
-let MP = Moose.position <- Some (5,1)
-let WP1 = Some (fst WP)
-printfn "WP1: %A" WP1
+let MP = Moose.position <- Some (2,4)
+let mellemrum = Wolf.position = Moose.position 
+printfn "%A" mellemrum
 (Distance Wolf Moose)
+
+if Wolf.position <- Some (1+1,5) = Moose.position then 
+    true 
+elif Wolf.position <- Some (1+1,5+1) = Moose.position then 
+    true 
+elif Wolf.position <- Some (1+1,5-1) = Moose.position then 
+    true 
+elif Wolf.position <- Some (1-1,5) = Moose.position then 
+    true 
+elif Wolf.position <- Some (1-1,5+1) = Moose.position then 
+    true 
+elif Wolf.position <- Some (1-1,5-1) = Moose.position then 
+    true 
+elif Wolf.position <- Some (1,5+1) = Moose.position then 
+    true 
+elif Wolf.position <- Some (1,5-1) = Moose.position then 
+    true 
+else 
+    false 
