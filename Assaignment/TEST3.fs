@@ -152,7 +152,7 @@ type environment (boardWidth : int, NMooses : int, mooseRepLen : int, NWolves : 
             _board.wolves.[j].resetHunger ()
             _board.moose.[i].position <- None
         
-        _board.moose <- _board.moose |> List.filter (fun x -> x.position.IsSome) // Fjerner elge med position None
+        _board.moose <- _board.moose |> List.filter (fun x -> x.position.IsSome) // Fjerner elge med positionen None
 
 
   override this.ToString () =
