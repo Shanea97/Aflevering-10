@@ -106,9 +106,9 @@ type environment (boardWidth : int, NMooses : int, mooseRepLen : int, NWolves : 
   member this.board = _board
   member this.tick () =
 
-    //_board.wolves <- _board.wolves |> List.filter (fun x -> x.hunger > 0) // Fjerner ulve fra listen som har sult 0 // Funktionen her fjerner åbentbart alle ulvene når de burde reproducere. 
+    _board.wolves <- _board.wolves |> List.filter (fun x -> x.hunger >= 0) // Fjerner ulve fra listen som har sult 0 // Funktionen her fjerner åbentbart alle ulvene når de burde reproducere. 
 
-    _board.wolves <- _board.wolves |> List.filter (fun x -> x.position.IsSome) // Her ser det umiddebart ud til at ulvene reproducere, men der er bare ingen der dør
+    //_board.wolves <- _board.wolves |> List.filter (fun x -> x.position.IsSome) // Her ser det umiddebart ud til at ulvene reproducere, men der er bare ingen der dør
 
     _board.moose <- _board.moose |> List.filter (fun x -> x.position.IsSome) // Fjerner elge fra listen som har position None
 
