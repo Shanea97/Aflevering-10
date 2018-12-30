@@ -108,9 +108,6 @@ type environment (boardWidth : int, NMooses : int, mooseRepLen : int, NWolves : 
 
     _board.wolves <- _board.wolves |> List.filter (fun x -> x.hunger >= 0) // Fjerner ulve fra listen som har sult 0 // 
 
-    _board.moose <- _board.moose |> List.filter (fun x -> x.position.IsSome) // Fjerner elge fra listen som har position None
-
-
     for i = 0 to _board.moose.Length - 1 do
       match _board.moose.[i].tick () with
         | Some (moose) ->
@@ -129,32 +126,35 @@ type environment (boardWidth : int, NMooses : int, mooseRepLen : int, NWolves : 
         | None ->
           // if (_board.wolves.[i]._hunger = 0) then
           _board.wolves.[i].position <- Some (anyEmptyField _board)
-(* //Denne del af koden giver fejl når man vil kører kør.exe filen. 
+
+//Denne del af koden giver fejl når man vil kører kør.exe filen. 
     for i = 0 to _board.moose.Length - 1 do
       for j = 0 to _board.wolves.Length - 1 do
         // tjek for ulv til venstre
-        if (fst _board.wolves.[j].position.Value + 1, snd _board.wolves.[j].position.Value) = _board.moose.[j].position.Value
-        then
+        if (fst _board.wolves.[j].position.Value + 1, snd _board.wolves.[j].position.Value) = _board.moose.[j].position.Value then
         //elg spises
-          _board.wolves.[j].position <- Some (_board.moose.[i].position.Value)
-          _board.wolves.[j].resetHunger ()
-          _board.moose.[i].position <- None
+            _board.wolves.[j].position <- Some (_board.moose.[i].position.Value)
+            _board.wolves.[j].resetHunger ()
+            _board.moose.[i].position <- None 
         //ulv til højre
         elif (fst _board.wolves.[j].position.Value - 1, snd _board.wolves.[j].position.Value) = _board.moose.[j].position.Value then
-          _board.wolves.[j].position <- Some (_board.moose.[i].position.Value)
-          _board.wolves.[j].resetHunger ()
-          _board.moose.[i].position <- None
+            _board.wolves.[j].position <- Some (_board.moose.[i].position.Value)
+            _board.wolves.[j].resetHunger ()
+            _board.moose.[i].position <- None
         //ulv nedenfor
         elif (fst _board.wolves.[j].position.Value, snd _board.wolves.[j].position.Value + 1) = _board.moose.[j].position.Value then
-          _board.wolves.[j].position <- Some (_board.moose.[i].position.Value)
-          _board.wolves.[j].resetHunger ()
-          _board.moose.[i].position <- None
+            _board.wolves.[j].position <- Some (_board.moose.[i].position.Value)
+            _board.wolves.[j].resetHunger ()
+            _board.moose.[i].position <- None
         //ulv ovenfor 
-        elif (fst _board.wolves.[j].position.Value, snd _board.wolves.[j].position.Value - 1) = _board.moose.[j].position.Value then
-          _board.wolves.[j].position <- Some (_board.moose.[i].position.Value)
-          _board.wolves.[j].resetHunger ()
-          _board.moose.[i].position <- None
-*)
+        else if (fst _board.wolves.[j].position.Value, snd _board.wolves.[j].position.Value - 1) = _board.moose.[j].position.Value then
+            _board.wolves.[j].position <- Some (_board.moose.[i].position.Value)
+            _board.wolves.[j].resetHunger ()
+            _board.moose.[i].position <- None
+        
+        _board.moose <- _board.moose |> List.filter (fun x -> x.position.IsSome) // Fjerner elge med position None
+
+
   override this.ToString () =
     let arr = draw _board
     let mutable ret = "  "
