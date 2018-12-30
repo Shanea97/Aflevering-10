@@ -108,7 +108,7 @@ type environment (boardWidth : int, NMooses : int, mooseRepLen : int, NWolves : 
 
     _board.wolves <- _board.wolves |> List.filter (fun x -> x.hunger > 0) // Fjerner ulve fra listen som har sult 0
 
-    _board.moose <- _board.moose |> List.filter (fun x -> x.position = None) // Fjerner elge fra listen som har position None
+    _board.moose <- _board.moose |> List.filter (fun x -> x.position.IsSome) // Fjerner elge fra listen som har position None
 
 
     for i = 0 to _board.moose.Length - 1 do
