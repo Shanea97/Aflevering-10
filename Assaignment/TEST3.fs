@@ -32,14 +32,14 @@ type animal (symb : symbol, repLen : int) =
 type moose (repLen : int) =
   inherit animal (mSymbol, repLen)
 
-  member this.tick () : moose option = /// if repLen =  0 then make new moose calf
+  member this.tick () : moose option = // if repLen =  0 then make new moose calf
     base.updateReproduction()
     if base.reproduction = 0 then
       base.resetReproduction()
       Some (moose(repLen))
     else
       None
-
+  
 /// A wolf is an animal with a hunger counter
 type wolf (repLen : int, hungLen : int) = // hungLen is its hunger counter
   inherit animal (wSymbol, repLen)
@@ -113,10 +113,23 @@ type environment (boardWidth : int, NMooses : int, mooseRepLen : int, NWolves : 
         | Some (moose) ->
           if _board.moose.[i].position = None then
             moose.position <- Some (anyEmptyField _board)
-            _board.moose <- moose  :: _board.moose
+            _board.moose <- moose :: _board.moose
         | None ->
           _board.moose.[i].position <- Some (anyEmptyField _board)
+
 (*
+    for i = 0 to _board.moose.Length - 1 do
+      match _board.moose.[i].tick () with
+        | Some (moose) ->
+          if _board.moose.[i].position = None then
+          //if _board.moose.[i].reproduction = 1 then
+            //_board.moose.[i].resetReproduction () 
+            //moose.position <- Some (moose(mooserepLen))
+            moose.position <- Some (anyEmptyField _board)
+            _board.moose <- moose :: _board.moose
+        | None ->
+          _board.moose.[i].position <- Some (anyEmptyField _board)
+*)(*
     for i = 0 to _board.moose.Length - 1 do
       _board.moose.[i].tick()
       if _board.moose.[i].reproduction = 1 then 
@@ -138,7 +151,7 @@ type environment (boardWidth : int, NMooses : int, mooseRepLen : int, NWolves : 
           // if (_board.wolves.[i]._hunger = 0) then
           _board.wolves.[i].position <- Some (anyEmptyField _board)
 
-//Denne del af koden giver fejl når man vil kører kør.exe filen. 
+
     for i = 0 to _board.moose.Length - 1 do
       for j = 0 to _board.wolves.Length - 1 do
         // tjek for ulv til venstre
