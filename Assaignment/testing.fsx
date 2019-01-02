@@ -131,7 +131,7 @@ type environment (boardWidth : int, NMooses : int, mooseRepLen : int, NWolves : 
 
       match _board.moose.[i].tick () with
         | Some (moose) ->
-          if _board.moose.[i].position = None then
+          if _board.moose.[i].position.IsSome then
             moose.position <- Some (anyEmptyField _board)
             _board.moose <- moose  :: _board.moose
         | None ->
