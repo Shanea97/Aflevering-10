@@ -30,16 +30,16 @@ type animal (symb : symbol, repLen : int) =
 
 /// A moose is an animal
 type moose (repLen : int) =
-  inherit animal (mSymbol, repLen)
+    inherit animal (mSymbol, repLen)
 
-  member this.tick () : moose option = // if repLen =  0 then make new moose calf
-    base.updateReproduction()
-    if base.reproduction = 0 then
-      base.resetReproduction()
-      Some (moose(repLen))
-    else
-      None
-  
+    member this.tick () : moose option = /// if repLen =  0 then make new moose calf
+        base.updateReproduction()
+        if base.reproduction = 0 then
+            base.resetReproduction()
+            Some (moose(repLen))
+        else
+            None
+
 /// A wolf is an animal with a hunger counter
 type wolf (repLen : int, hungLen : int) = // hungLen is its hunger counter
   inherit animal (wSymbol, repLen)
@@ -66,7 +66,7 @@ type board =
   {width : int;
    mutable moose : moose list;
    mutable wolves : wolf list;}
-/// An environment is a chess-like board with all animals and implementing all rules.
+/// An environment is a chess-like board with all animals and implenting all rules.
 type environment (boardWidth : int, NMooses : int, mooseRepLen : int, NWolves : int, wolvesRepLen : int, wolvesHungLen : int, verbose : bool) =
   let _board : board = {
     width = boardWidth;
@@ -101,58 +101,58 @@ type environment (boardWidth : int, NMooses : int, mooseRepLen : int, NWolves : 
 
   member this.size = boardWidth*boardWidth
   member this.count = _board.moose.Length + _board.wolves.Length
+  member this.board = _board
   member this.moosecount = _board.moose.Length
   member this.wolfcount = _board.wolves.Length
-  member this.board = _board
   member this.tick () =
+    _board.wolves <- _board.wolves |> List.filter (fun x -> x.position.IsSome)
 
-     // Fjerner ulve fra listen som har sult 0 // 
+    _board.moose <- _board.moose |> List.filter (fun x -> x.position.IsSome)
+      // Fjerner elge og ulve fra listen som har position None
     for i = 0 to _board.moose.Length - 1 do
+
       match _board.moose.[i].tick () with
         | Some (moose) ->
-          if _board.moose.[i].position.IsSome then
+          if not _board.moose.[i].position.IsSome then
             moose.position <- Some (anyEmptyField _board)
-            _board.moose <- moose :: _board.moose
+            _board.moose <- moose  :: _board.moose
         | None ->
-          _board.moose.[i].position <- None //Some (anyEmptyField _board)
-
-    _board.wolves <- _board.wolves |> List.filter (fun x -> x.hunger >= 0)
+          _board.moose.[i].position <- Some (anyEmptyField _board)
     for i = 0 to _board.wolves.Length - 1 do
       match _board.wolves.[i].tick () with
         | Some (wolf) ->
-          if _board.wolves.[i].position = None then
+          if not _board.wolves.[i].position.IsSome then
             wolf.position <- Some (anyEmptyField _board)
             _board.wolves <- wolf :: _board.wolves
         | None ->
-          // if (_board.wolves.[i]._hunger = 0) then
+
           _board.wolves.[i].position <- Some (anyEmptyField _board)
 
-
-    for i = 0 to _board.moose.Length - 1 do
-      for j = 0 to _board.wolves.Length - 1 do
-        // tjek for ulv til venstre
-        if (fst _board.wolves.[j].position.Value + 1, snd _board.wolves.[j].position.Value) = _board.moose.[i].position.Value then
+    //forsøg på at implementere spisning, der ikke virker
+    //for i = 0 to _board.moose.Length - 1 do
+    //  for j = 0 to _board.wolves.Length - 1 do
+    //    // tjek for ulv til venstre
+    //    if (fst _board.wolves.[j].position.Value + 1, snd _board.wolves.[j].position.Value) = _board.moose.[j].position.Value
+    //    then
         //elg spises
-            _board.wolves.[j].position <- Some (_board.moose.[i].position.Value)
-            _board.wolves.[j].resetHunger ()
-            _board.moose.[i].position <- None 
+    //      _board.wolves.[j].position <- Some (_board.moose.[i].position.Value)
+    //      _board.wolves.[j].resetHunger ()
+    //      _board.moose.[i].position <- None
         //ulv til højre
-        elif (fst _board.wolves.[j].position.Value - 1, snd _board.wolves.[j].position.Value) = _board.moose.[i].position.Value then
-            _board.wolves.[j].position <- Some (_board.moose.[i].position.Value)
-            _board.wolves.[j].resetHunger ()
-            _board.moose.[i].position <- None
+    //    elif (fst _board.wolves.[j].position.Value - 1, snd _board.wolves.[j].position.Value) = _board.moose.[j].position.Value then
+    //      _board.wolves.[j].position <- Some (_board.moose.[i].position.Value)
+    //      _board.wolves.[j].resetHunger ()
+    //      _board.moose.[i].position <- None
         //ulv nedenfor
-        elif (fst _board.wolves.[j].position.Value, snd _board.wolves.[j].position.Value + 1) = _board.moose.[i].position.Value then
-            _board.wolves.[j].position <- Some (_board.moose.[i].position.Value)
-            _board.wolves.[j].resetHunger ()
-            _board.moose.[i].position <- None
-        //ulv ovenfor 
-        else if (fst _board.wolves.[j].position.Value, snd _board.wolves.[j].position.Value - 1) = _board.moose.[i].position.Value then
-            _board.wolves.[j].position <- Some (_board.moose.[i].position.Value)
-            _board.wolves.[j].resetHunger ()
-            _board.moose.[i].position <- None
-        
-        _board.moose <- _board.moose |> List.filter (fun x -> x.position.IsSome) // Fjerner elge med positionen None
+    //    elif (fst _board.wolves.[j].position.Value, snd _board.wolves.[j].position.Value + 1) = _board.moose.[j].position.Value then
+    //      _board.wolves.[j].position <- Some (_board.moose.[i].position.Value)
+    //      _board.wolves.[j].resetHunger ()
+    //      _board.moose.[i].position <- None
+        //ulv ovenfor
+    //    else if (fst _board.wolves.[j].position.Value, snd _board.wolves.[j].position.Value - 1) = _board.moose.[j].position.Value then
+    //      _board.wolves.[j].position <- Some (_board.moose.[i].position.Value)
+    //      _board.wolves.[j].resetHunger ()
+    //      _board.moose.[i].position <- None
 
 
   override this.ToString () =
@@ -167,16 +167,3 @@ type environment (boardWidth : int, NMooses : int, mooseRepLen : int, NWolves : 
         ret <- ret + string arr.[i,j] + " "
       ret <- ret + "\n"
     ret
-
-
-(*    
-let NewEnvironment = environment(10, 2, 10, 1, 10, 8, true)
-
-for i = 0 to 10 do
-  NewEnvironment.tick()
-  printfn "%s" (NewEnvironment.ToString())
-  for j = 0 to NewEnvironment.board.moose.Length-1 do   
-    printfn "Moose %i's RepLen: %A\nMoose %i's position: %A" j NewEnvironment.board.moose.[j].reproduction  j NewEnvironment.board.moose.[j].position
-  for x = 0 to NewEnvironment.board.wolves.Length-1 do 
-    printfn "Wolf %i's RepLen: %A\nWolf %i's position: %A" x NewEnvironment.board.wolves.[x].reproduction x NewEnvironment.board.wolves.[x].position
-*)
