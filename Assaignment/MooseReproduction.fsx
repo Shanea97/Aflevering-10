@@ -115,6 +115,17 @@ type environment (boardWidth : int, NMooses : int, mooseRepLen : int, NWolves : 
             _board.moose <- _board.moose @ [newmoose] 
         _board.moose.[i].position <- Some (anyEmptyField _board)
 
+
+//Program.fs "løsning"
+  //  for i = 0 to _board.moose.Length - 1 do
+
+  //     match _board.moose.[i].tick () with
+  //       | Some (moose) ->
+  //         if not _board.moose.[i].position.IsSome then
+  //           moose.position <- Some (anyEmptyField _board)
+  //           _board.moose <- moose  :: _board.moose
+  //       | None ->
+  //         _board.moose.[i].position <- Some (anyEmptyField _board)
     
     
     
@@ -127,6 +138,17 @@ type environment (boardWidth : int, NMooses : int, mooseRepLen : int, NWolves : 
             newWolf.position <- Some (anyEmptyField _board)
             _board.wolves <- _board.wolves @ [newWolf]
         _board.wolves.[j].position <- Some (anyEmptyField _board)
+
+
+    // for i = 0 to _board.wolves.Length - 1 do
+    //   match _board.wolves.[i].tick () with
+    //     | Some (wolf) ->
+    //       if not _board.wolves.[i].position.IsSome then
+    //         wolf.position <- Some (anyEmptyField _board)
+    //         _board.wolves <- wolf :: _board.wolves
+    //     | None ->
+
+    //       _board.wolves.[i].position <- Some (anyEmptyField _board)
         
         // // else 
         // //     for x = 0 to _board.moose.Length-1 do 
@@ -158,7 +180,7 @@ type environment (boardWidth : int, NMooses : int, mooseRepLen : int, NWolves : 
       ret <- ret + "\n"
     ret
 
-let NewEnvironment = environment(10, 2, 10, 1, 10, 8, true)
+let NewEnvironment = environment(10, 2, 10, 1, 5, 8, true)
 //Dette kan køre, og viser hvordan ulve og elge bevæger sig rundt, samt reproduktion:
 for i = 0 to 10 do
   NewEnvironment.tick()
