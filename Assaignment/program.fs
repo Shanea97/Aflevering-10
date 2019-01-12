@@ -110,23 +110,22 @@ type environment (boardWidth : int, NMooses : int, mooseRepLen : int, NWolves : 
     _board.moose <- _board.moose |> List.filter (fun x -> x.position.IsSome)
       // Fjerner elge og ulve fra listen som har position None
     for i = 0 to _board.moose.Length - 1 do
-
-      match _board.moose.[i].tick () with
-        | Some (moose) ->
-          if not _board.moose.[i].position.IsSome then
-            moose.position <- Some (anyEmptyField _board)
-            _board.moose <- moose  :: _board.moose
-        | None ->
-          _board.moose.[i].position <- Some (anyEmptyField _board)
-    for i = 0 to _board.wolves.Length - 1 do
-      match _board.wolves.[i].tick () with
-        | Some (wolf) ->
-          if not _board.wolves.[i].position.IsSome then
-            wolf.position <- Some (anyEmptyField _board)
-            _board.wolves <- wolf :: _board.wolves
-        | None ->
-
-          _board.wolves.[i].position <- Some (anyEmptyField _board)
+        _board.moose.[i].tick()
+        if _board.moose.[i].reproduction = 1 then 
+            // _board.moose.[i].position <- Some (anyEmptyField _board)
+            let newmoose = moose(mooseRepLen)
+            newmoose.position <- Some (anyEmptyField _board)
+            _board.moose <- _board.moose @ [newmoose] 
+        _board.moose.[i].position <- Some (anyEmptyField _board)
+    
+    for j = 0 to _board.wolves.Length - 1 do
+        _board.wolves.[j].tick ()
+        if _board.wolves.[j].reproduction = 1 then
+            // _board.wolves.[j].position <- Some (anyEmptyField _board)
+            let newWolf = wolf(wolvesRepLen,wolvesHungLen)
+            newWolf.position <- Some (anyEmptyField _board)
+            _board.wolves <- _board.wolves @ [newWolf]
+        _board.wolves.[j].position <- Some (anyEmptyField _board)
 
     //forsøg på at implementere spisning, der ikke virker
     //for i = 0 to _board.moose.Length - 1 do
@@ -167,3 +166,13 @@ type environment (boardWidth : int, NMooses : int, mooseRepLen : int, NWolves : 
         ret <- ret + string arr.[i,j] + " "
       ret <- ret + "\n"
     ret
+
+let NewEnvironment = environment(10, 2, 15, 1, 7, 8, true)
+//Dette kan køre, og viser hvordan ulve og elge bevæger sig rundt, samt reproduktion:
+for i = 0 to 10 do
+  NewEnvironment.tick()
+  printfn "%s" (NewEnvironment.ToString())
+  for j = 0 to NewEnvironment.board.moose.Length-1 do   
+    printfn "Moose %i's RepLen: %A\nMoose %i's position: %A" j NewEnvironment.board.moose.[j].reproduction  j NewEnvironment.board.moose.[j].position
+  for x = 0 to NewEnvironment.board.wolves.Length-1 do 
+    printfn "Wolf %i's RepLen: %A\nWolf %i's position: %A" x NewEnvironment.board.wolves.[x].reproduction x NewEnvironment.board.wolves.[x].position

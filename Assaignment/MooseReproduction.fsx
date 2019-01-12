@@ -115,6 +115,17 @@ type environment (boardWidth : int, NMooses : int, mooseRepLen : int, NWolves : 
             _board.moose <- _board.moose @ [newmoose] 
         _board.moose.[i].position <- Some (anyEmptyField _board)
 
+
+//Program.fs "løsning"
+  //  for i = 0 to _board.moose.Length - 1 do
+
+  //     match _board.moose.[i].tick () with
+  //       | Some (moose) ->
+  //         if not _board.moose.[i].position.IsSome then
+  //           moose.position <- Some (anyEmptyField _board)
+  //           _board.moose <- moose  :: _board.moose
+  //       | None ->
+  //         _board.moose.[i].position <- Some (anyEmptyField _board)
     
     
     
@@ -127,6 +138,17 @@ type environment (boardWidth : int, NMooses : int, mooseRepLen : int, NWolves : 
             newWolf.position <- Some (anyEmptyField _board)
             _board.wolves <- _board.wolves @ [newWolf]
         _board.wolves.[j].position <- Some (anyEmptyField _board)
+
+
+    // for i = 0 to _board.wolves.Length - 1 do
+    //   match _board.wolves.[i].tick () with
+    //     | Some (wolf) ->
+    //       if not _board.wolves.[i].position.IsSome then
+    //         wolf.position <- Some (anyEmptyField _board)
+    //         _board.wolves <- wolf :: _board.wolves
+    //     | None ->
+
+    //       _board.wolves.[i].position <- Some (anyEmptyField _board)
         
         // // else 
         // //     for x = 0 to _board.moose.Length-1 do 
@@ -158,56 +180,56 @@ type environment (boardWidth : int, NMooses : int, mooseRepLen : int, NWolves : 
       ret <- ret + "\n"
     ret
 
-let NewEnvironment = environment(10, 2, 10, 1, 10, 8, true)
-// Dette kan køre, og viser hvordan ulve og elge bevæger sig rundt, samt reproduktion:
-// for i = 0 to 10 do
-//   NewEnvironment.tick()
-//   printfn "%s" (NewEnvironment.ToString())
-//   for j = 0 to NewEnvironment.board.moose.Length-1 do   
-//     printfn "Moose %i's RepLen: %A\nMoose %i's position: %A" j NewEnvironment.board.moose.[j].reproduction  j NewEnvironment.board.moose.[j].position
-//   for x = 0 to NewEnvironment.board.wolves.Length-1 do 
-//     printfn "Wolf %i's RepLen: %A\nWolf %i's position: %A" x NewEnvironment.board.wolves.[x].reproduction x NewEnvironment.board.wolves.[x].position
+let NewEnvironment = environment(10, 2, 10, 1, 5, 8, true)
+//Dette kan køre, og viser hvordan ulve og elge bevæger sig rundt, samt reproduktion:
+for i = 0 to 10 do
+  NewEnvironment.tick()
+  printfn "%s" (NewEnvironment.ToString())
+  for j = 0 to NewEnvironment.board.moose.Length-1 do   
+    printfn "Moose %i's RepLen: %A\nMoose %i's position: %A" j NewEnvironment.board.moose.[j].reproduction  j NewEnvironment.board.moose.[j].position
+  for x = 0 to NewEnvironment.board.wolves.Length-1 do 
+    printfn "Wolf %i's RepLen: %A\nWolf %i's position: %A" x NewEnvironment.board.wolves.[x].reproduction x NewEnvironment.board.wolves.[x].position
 
 
-// Forsøg på at få ulve til at spise elge. 
-let NyElg = moose(5)
-NyElg.position <- Some (10,15)
-printfn "%A" NyElg.position
-let Mfirst = float(fst (NyElg.position.Value))
-let Msecond = float(snd (NyElg.position.Value))
+// // Forsøg på at få ulve til at spise elge. 
+// let NyElg = moose(5)
+// NyElg.position <- Some (10,15)
+// printfn "%A" NyElg.position
+// let Mfirst = float(fst (NyElg.position.Value))
+// let Msecond = float(snd (NyElg.position.Value))
 
-let NyUlv = wolf(5,7)
-NyUlv.position <- Some (10,16)
-let Wfirst = float(fst (NyUlv.position.Value))
-let Wsecond = float(snd (NyUlv.position.Value))
-// let distance = int(sqrt((Mfirst-Wfirst)*(Mfirst-Wfirst))+((Msecond-Wsecond)*(Msecond-Wsecond)))
+// let NyUlv = wolf(5,7)
+// NyUlv.position <- Some (10,16)
+// let Wfirst = float(fst (NyUlv.position.Value))
+// let Wsecond = float(snd (NyUlv.position.Value))
+// // let distance = int(sqrt((Mfirst-Wfirst)*(Mfirst-Wfirst))+((Msecond-Wsecond)*(Msecond-Wsecond)))
 
-let BW = wolf(5,7)
-BW.position <- Some (10,16)
-let CW = wolf(5,7)
-CW.position <- Some (20,3)
-let AM = moose(5)
-AM.position <- Some (10,15)
-let BM = moose(5)
-BM.position <- Some (18,2)
-let CM = moose(5)
-CM.position <- Some (15,23)
-let DM = moose(5)
-DM.position <- Some (8,15)
+// let BW = wolf(5,7)
+// BW.position <- Some (10,16)
+// let CW = wolf(5,7)
+// CW.position <- Some (20,3)
+// let AM = moose(5)
+// AM.position <- Some (10,15)
+// let BM = moose(5)
+// BM.position <- Some (18,2)
+// let CM = moose(5)
+// CM.position <- Some (15,23)
+// let DM = moose(5)
+// DM.position <- Some (8,15)
 
-let mutable NewMooseList = [AM;BM;CM;DM]
-let mutable NewWolfList = [BW;CW]
-for wolf = 0 to NewWolfList.Length-1 do 
-  printfn "Wolf here"
-  NewMooseList <- NewMooseList |> List.filter (fun x -> x.position.IsSome = true)
-  for moose = 0 to NewMooseList.Length-1 do 
-    printfn "Moose here"
-    let WolfFirst = float(fst (NewWolfList.[wolf].position.Value))
-    let WolfSecond = float(snd (NewWolfList.[wolf].position.Value))
-    let MooseFirst = float(fst (NewMooseList.[moose].position.Value))
-    let MooseSecond = float(snd (NewMooseList.[moose].position.Value))
-    let Distance = int(sqrt((MooseFirst-WolfFirst)*(MooseFirst-WolfFirst))+((MooseSecond-WolfSecond)*(MooseSecond-WolfSecond)))
-    if Distance = 1 then 
-      NewMooseList.[moose].position <- None
-      NewWolfList.[wolf].position <- NewMooseList.[moose].position
+// let mutable NewMooseList = [AM;BM;CM;DM]
+// let mutable NewWolfList = [BW;CW]
+// for wolf = 0 to NewWolfList.Length-1 do 
+//   printfn "Wolf here"
+//   NewMooseList <- NewMooseList |> List.filter (fun x -> x.position.IsSome = true)
+//   for moose = 0 to NewMooseList.Length-1 do 
+//     printfn "Moose here"
+//     let WolfFirst = float(fst (NewWolfList.[wolf].position.Value))
+//     let WolfSecond = float(snd (NewWolfList.[wolf].position.Value))
+//     let MooseFirst = float(fst (NewMooseList.[moose].position.Value))
+//     let MooseSecond = float(snd (NewMooseList.[moose].position.Value))
+//     let Distance = int(sqrt((MooseFirst-WolfFirst)*(MooseFirst-WolfFirst))+((MooseSecond-WolfSecond)*(MooseSecond-WolfSecond)))
+//     if Distance = 1 then 
+//       NewMooseList.[moose].position <- None
+//       NewWolfList.[wolf].position <- NewMooseList.[moose].position
 
