@@ -53,8 +53,8 @@ type wolf (repLen : int, hungLen : int) = // hungLen is its hunger counter
   member this.resetHunger () =
     _hunger <- hungLen
   member this.tick () : wolf option =
-    base.updateReproduction()
     this.updateHunger()
+    base.updateReproduction()
     if base.reproduction = 0 then
       base.resetReproduction()
       Some (wolf(repLen, hungLen))
@@ -106,6 +106,9 @@ type environment (boardWidth : int, NMooses : int, mooseRepLen : int, NWolves : 
   member this.wolfcount = _board.wolves.Length
   member this.tick () =
 
+    _board.wolves <- _board.wolves |> List.filter (fun x -> x.position.IsSome)
+
+    _board.moose <- _board.moose |> List.filter (fun x -> x.position.IsSome)
     (*for i = 0 to this.moosecount - 1 do
         _board.moose.[i].tick()
         if _board.moose.[i].reproduction = 1 then
@@ -160,9 +163,7 @@ type environment (boardWidth : int, NMooses : int, mooseRepLen : int, NWolves : 
               _board.wolves.[j].position <- pos
             else _board.wolves.[j].position <- _board.wolves.[j].position
 
-    _board.wolves <- _board.wolves |> List.filter (fun x -> x.position.IsSome)
 
-    _board.moose <- _board.moose |> List.filter (fun x -> x.position.IsSome)
     //forsøg på at implementere spisning, der ikke virker
     //for i = 0 to _board.moose.Length - 1 do
     //  for j = 0 to _board.wolves.Length - 1 do
