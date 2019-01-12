@@ -105,28 +105,64 @@ type environment (boardWidth : int, NMooses : int, mooseRepLen : int, NWolves : 
   member this.moosecount = _board.moose.Length
   member this.wolfcount = _board.wolves.Length
   member this.tick () =
-    _board.wolves <- _board.wolves |> List.filter (fun x -> x.position.IsSome)
 
-    _board.moose <- _board.moose |> List.filter (fun x -> x.position.IsSome)
-      // Fjerner elge og ulve fra listen som har position None
-    for i = 0 to _board.moose.Length - 1 do
+    (*for i = 0 to this.moosecount - 1 do
         _board.moose.[i].tick()
-        if _board.moose.[i].reproduction = 1 then 
-            // _board.moose.[i].position <- Some (anyEmptyField _board)
+        if _board.moose.[i].reproduction = 1 then
+
             let newmoose = moose(mooseRepLen)
             newmoose.position <- Some (anyEmptyField _board)
-            _board.moose <- _board.moose @ [newmoose] 
+            _board.moose <- _board.moose @ [newmoose]
         _board.moose.[i].position <- Some (anyEmptyField _board)
-    
-    for j = 0 to _board.wolves.Length - 1 do
+
+    for j = 0 to this.wolfcount - 1 do
         _board.wolves.[j].tick ()
         if _board.wolves.[j].reproduction = 1 then
-            // _board.wolves.[j].position <- Some (anyEmptyField _board)
             let newWolf = wolf(wolvesRepLen,wolvesHungLen)
             newWolf.position <- Some (anyEmptyField _board)
             _board.wolves <- _board.wolves @ [newWolf]
-        _board.wolves.[j].position <- Some (anyEmptyField _board)
+        _board.wolves.[j].position <- Some (anyEmptyField _board)*)
+    let elge = _board.moose.Length - 1
+    for i = 0 to elge do
 
+        let tick = _board.moose.[i].tick()
+        let pos = if _board.moose.[i].position.IsSome then Some (anyEmptyField _board) else None
+        if tick.IsSome && pos.IsSome then
+          let newmoose = tick.Value
+          newmoose.position <- pos
+          newmoose.resetReproduction()
+          _board.moose <- _board.moose @ [newmoose]
+        else
+          if _board.moose.[i].position.IsSome then
+            let pos = Some (anyEmptyField _board)
+            if pos.IsSome then
+              _board.moose.[i].position <- pos
+
+    let ulve = _board.wolves.Length - 1
+    for j = 0 to ulve do
+
+        let tick = _board.wolves.[j].tick ()
+        let pos = if _board.wolves.[j].position.IsSome then Some (anyEmptyField _board) else None
+        if tick.IsSome && pos.IsSome then
+          let newwolf = tick.Value
+          newwolf.position <- pos
+          newwolf.resetReproduction()
+          newwolf.resetHunger()
+          _board.wolves <- _board.wolves @ [newwolf]
+        else
+          if _board.wolves.[j].position.IsSome then
+            let offer = if _board.wolves.[j].position.IsSome then Some (anyEmptyField _board) else None
+            if offer.IsSome then
+              _board.wolves.[j].position <- offer
+              (List.find (fun (x: moose) -> _board.wolves.[j].position = offer) _board.moose).position <- None
+              _board.wolves.[j].resetHunger()
+            elif pos.IsSome then
+              _board.wolves.[j].position <- pos
+            else _board.wolves.[j].position <- _board.wolves.[j].position
+
+    _board.wolves <- _board.wolves |> List.filter (fun x -> x.position.IsSome)
+
+    _board.moose <- _board.moose |> List.filter (fun x -> x.position.IsSome)
     //forsøg på at implementere spisning, der ikke virker
     //for i = 0 to _board.moose.Length - 1 do
     //  for j = 0 to _board.wolves.Length - 1 do
@@ -167,12 +203,12 @@ type environment (boardWidth : int, NMooses : int, mooseRepLen : int, NWolves : 
       ret <- ret + "\n"
     ret
 
-let NewEnvironment = environment(10, 2, 15, 1, 7, 8, true)
+(*let NewEnvironment = environment(10, 2, 15, 1, 7, 8, true)
 //Dette kan køre, og viser hvordan ulve og elge bevæger sig rundt, samt reproduktion:
 for i = 0 to 10 do
   NewEnvironment.tick()
   printfn "%s" (NewEnvironment.ToString())
-  for j = 0 to NewEnvironment.board.moose.Length-1 do   
+  for j = 0 to NewEnvironment.board.moose.Length-1 do
     printfn "Moose %i's RepLen: %A\nMoose %i's position: %A" j NewEnvironment.board.moose.[j].reproduction  j NewEnvironment.board.moose.[j].position
-  for x = 0 to NewEnvironment.board.wolves.Length-1 do 
-    printfn "Wolf %i's RepLen: %A\nWolf %i's position: %A" x NewEnvironment.board.wolves.[x].reproduction x NewEnvironment.board.wolves.[x].position
+  for x = 0 to NewEnvironment.board.wolves.Length-1 do
+    printfn "Wolf %i's RepLen: %A\nWolf %i's position: %A" x NewEnvironment.board.wolves.[x].reproduction x NewEnvironment.board.wolves.[x].position*)
