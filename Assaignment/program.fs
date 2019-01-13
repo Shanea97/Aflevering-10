@@ -204,12 +204,12 @@ type environment (boardWidth : int, NMooses : int, mooseRepLen : int, NWolves : 
       ret <- ret + "\n"
     ret
 
-(*let NewEnvironment = environment(10, 2, 15, 1, 7, 8, true)
-//Dette kan køre, og viser hvordan ulve og elge bevæger sig rundt, samt reproduktion:
-for i = 0 to 10 do
-  NewEnvironment.tick()
-  printfn "%s" (NewEnvironment.ToString())
-  for j = 0 to NewEnvironment.board.moose.Length-1 do
-    printfn "Moose %i's RepLen: %A\nMoose %i's position: %A" j NewEnvironment.board.moose.[j].reproduction  j NewEnvironment.board.moose.[j].position
-  for x = 0 to NewEnvironment.board.wolves.Length-1 do
-    printfn "Wolf %i's RepLen: %A\nWolf %i's position: %A" x NewEnvironment.board.wolves.[x].reproduction x NewEnvironment.board.wolves.[x].position*)
+// let NewEnvironment = environment(10, 2, 15, 1, 7, 8, true)
+// //Dette kan køre, og viser hvordan ulve og elge bevæger sig rundt, samt reproduktion:
+// for i = 0 to 10 do
+//   NewEnvironment.tick()
+//   printfn "%s" (NewEnvironment.ToString())
+//   for j = 0 to NewEnvironment.board.moose.Length-1 do
+//     printfn "Moose %i's RepLen: %A\nMoose %i's position: %A" j NewEnvironment.board.moose.[j].reproduction  j NewEnvironment.board.moose.[j].position
+//   for x = 0 to NewEnvironment.board.wolves.Length-1 do
+//     printfn "Wolf %i's RepLen: %A\nWolf %i's position: %A" x NewEnvironment.board.wolves.[x].reproduction x NewEnvironment.board.wolves.[x].position
