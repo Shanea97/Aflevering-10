@@ -21,6 +21,7 @@ let main args  =
     writer.Write "Ticks\n"
     for i = 1 to time do
       env.tick()
+      printfn "%A" env
       writer.Write (env.count)
       writer.Write ","
       writer.Write (env.wolfcount)
@@ -29,5 +30,6 @@ let main args  =
       writer.Write ","
       writer.Write (i)
       writer.Write "\n"
-    writer.Close ()
+    writer.Flush()
+    writer.Close()
     0 //succesindikator for funktion
