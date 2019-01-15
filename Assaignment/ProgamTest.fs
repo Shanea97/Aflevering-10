@@ -134,48 +134,74 @@ type environment (boardWidth : int, NMooses : int, mooseRepLen : int, NWolves : 
             newWolf.position <- Some (anyEmptyField _board)
             _board.wolves <- _board.wolves @ [newWolf]
         _board.wolves.[j].position <- Some (anyEmptyField _board)*)
-    
-    let elge = _board.moose.Length - 1
-    for i = 0 to elge do
-        let tick = _board.moose.[i].tick()
-        let pos = if _board.moose.[i].position.IsSome then Some (anyEmptyField _board) else None
-        if tick.IsSome && pos.IsSome then
-          let newmoose = tick.Value
-          newmoose.position <- pos
-          _board.moose <- _board.moose @ [newmoose]
-        else
-          if _board.moose.[i].position.IsSome then
-            let pos = Some (anyEmptyField _board)
-            if pos.IsSome then
-              _board.moose.[i].position <- pos
+    if anyEmptyField.IsSome then 
+        let elge = _board.moose.Length - 1
+        for i = 0 to elge do
+            let tick = _board.moose.[i].tick()
+            let pos = if _board.moose.[i].position.IsSome then Some (anyEmptyField _board) else None
+            if tick.IsSome && pos.IsSome then
+              let newmoose = tick.Value
+              newmoose.position <- pos
+            _board.moose <- _board.moose @ [newmoose]
+            else
+                if _board.moose.[i].position.IsSome then
+                let pos = Some (anyEmptyField _board)
+                if pos.IsSome then
+                    _board.moose.[i].position <- pos
+     
+        let ulve = _board.wolves.Length - 1
+        for j = 0 to ulve do
+            let tick = _board.wolves.[j].tick ()
+            let pos = if _board.wolves.[j].position.IsSome then Some (anyEmptyField _board) else None
+            if tick.IsSome && pos.IsSome then
+              let newwolf = tick.Value
+              newwolf.position <- Some (anyEmptyField _board)
+              _board.wolves <- _board.wolves @ [newwolf]
+            else
+                if _board.wolves.[j].position.IsSome then
+                let offer = if _board.wolves.[j].position.IsSome then Some (anyEmptyField _board) else None
 
-    let ulve = _board.wolves.Length - 1
-    for j = 0 to ulve do
-        let tick = _board.wolves.[j].tick ()
-        let pos = if _board.wolves.[j].position.IsSome then Some (anyEmptyField _board) else None
-        if tick.IsSome && pos.IsSome then
-          let newwolf = tick.Value
-          newwolf.position <- Some (anyEmptyField _board)
-          _board.wolves <- _board.wolves @ [newwolf]
-        else
-          if _board.wolves.[j].position.IsSome then
-            let offer = if _board.wolves.[j].position.IsSome then Some (anyEmptyField _board) else None
+                let offer1 = if _board.wolves.[j].position.IsSome then Some (anyEmptyOrMooseField _board) else None
 
-            let offer1 = if _board.wolves.[j].position.IsSome then Some (anyEmptyOrMooseField _board) else None
+                if offer1.IsSome then
+                let exists = List.exists (fun (elem:moose) -> elem.position.IsSome && elem.position.Value = offer1.Value) _board.moose
+                printfn "%A" exists
+                if exists then 
+                    printfn "Exists"
+                    (List.find (fun (x: moose) -> x.position.IsSome && x.position.Value = offer1.Value) _board.moose).position <- None
+                    _board.wolves.[j].resetHunger()
+                    _board.wolves.[j].position <- offer1
+                elif pos.IsSome then
+                    _board.wolves.[j].position <- pos
+                else
+                    _board.wolves.[j].position <- _board.wolves.[j].position
+    else 
+        let ulve = _board.wolves.Length - 1
+        for j = 0 to ulve do
+            let tick = _board.wolves.[j].tick ()
+            let pos = if _board.wolves.[j].position.IsSome then Some (anyEmptyField _board) else None
+            if tick.IsSome && pos.IsSome then
+              let newwolf = tick.Value
+              newwolf.position <- Some (anyEmptyField _board)
+              _board.wolves <- _board.wolves @ [newwolf]
+            else
+                if _board.wolves.[j].position.IsSome then
+                let offer = if _board.wolves.[j].position.IsSome then Some (anyEmptyField _board) else None
 
-            if offer1.IsSome then
-              let exists = List.exists (fun (elem:moose) -> elem.position.IsSome && elem.position.Value = offer1.Value) _board.moose
-              printfn "%A" exists
-              if exists then 
-                printfn "Exists"
-                (List.find (fun (x: moose) -> x.position.IsSome && x.position.Value = offer1.Value) _board.moose).position <- None
-                _board.wolves.[j].resetHunger()
-                _board.wolves.[j].position <- offer1
-              elif pos.IsSome then
-                _board.wolves.[j].position <- pos
-              else
-                _board.wolves.[j].position <- _board.wolves.[j].position
+                let offer1 = if _board.wolves.[j].position.IsSome then Some (anyEmptyOrMooseField _board) else None
 
+                if offer1.IsSome then
+                let exists = List.exists (fun (elem:moose) -> elem.position.IsSome && elem.position.Value = offer1.Value) _board.moose
+                printfn "%A" exists
+                if exists then 
+                    printfn "Exists"
+                    (List.find (fun (x: moose) -> x.position.IsSome && x.position.Value = offer1.Value) _board.moose).position <- None
+                    _board.wolves.[j].resetHunger()
+                    _board.wolves.[j].position <- offer1
+                elif pos.IsSome then
+                    _board.wolves.[j].position <- pos
+                else
+                    _board.wolves.[j].position <- _board.wolves.[j].position
 
     //forsøg på at implementere spisning, der ikke virker
     //for i = 0 to _board.moose.Length - 1 do
