@@ -12,7 +12,7 @@ let main args  =
     let mooseRepLen = int(args.[5]) //f_els
     let wolvesRepLen = int(args.[6]) //f_ulv
     let wolvesHungLen = int(args.[7]) //sulttid
-    let env = environment (boardWidth, NMooses, mooseRepLen, NWolves, wolvesRepLen, wolvesRepLen, true)
+    let env = environment (boardWidth, NMooses, mooseRepLen, NWolves, wolvesRepLen, wolvesHungLen, true)
     ///vi skriver data ud i csv.format
     let writer = System.IO.File.CreateText navn
     writer.Write "Samlet antal dyr,"

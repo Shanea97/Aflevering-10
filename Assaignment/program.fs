@@ -115,8 +115,11 @@ type environment (boardWidth : int, NMooses : int, mooseRepLen : int, NWolves : 
   member this.wolfcount = _board.wolves.Length
   member this.tick () =
 
+    printfn "ListW IsSome"
     _board.wolves <- _board.wolves |> List.filter (fun x -> x.position.IsSome)
-    _board.wolves <- _board.wolves |> List.filter (fun x -> x.hunger > 0)
+    printfn "ListW Hunger"
+    _board.wolves <- _board.wolves |> List.filter (fun x -> x.hunger >= 1)
+    printfn "ListM IsSome"
     _board.moose <- _board.moose |> List.filter (fun x -> x.position.IsSome)
     (*for i = 0 to this.moosecount - 1 do
         _board.moose.[i].tick()
@@ -142,7 +145,6 @@ type environment (boardWidth : int, NMooses : int, mooseRepLen : int, NWolves : 
         if tick.IsSome && pos.IsSome then
           let newmoose = tick.Value
           newmoose.position <- pos
-          newmoose.resetReproduction()
           _board.moose <- _board.moose @ [newmoose]
         else
           if _board.moose.[i].position.IsSome then
@@ -156,9 +158,7 @@ type environment (boardWidth : int, NMooses : int, mooseRepLen : int, NWolves : 
         let pos = if _board.wolves.[j].position.IsSome then Some (anyEmptyField _board) else None
         if tick.IsSome && pos.IsSome then
           let newwolf = tick.Value
-          newwolf.position <- pos
-          newwolf.resetReproduction()
-          newwolf.resetHunger()
+          newwolf.position <- Some (anyEmptyField _board)
           _board.wolves <- _board.wolves @ [newwolf]
         else
           if _board.wolves.[j].position.IsSome then
@@ -171,6 +171,7 @@ type environment (boardWidth : int, NMooses : int, mooseRepLen : int, NWolves : 
               if exists then 
                 (List.find (fun (x: moose) -> x.position.Value = offer1.Value) _board.moose).position <- None
               _board.wolves.[j].resetHunger()
+              _board.wolves.[j].position <- offer1
             elif pos.IsSome then
               _board.wolves.[j].position <- offer1
             else
@@ -217,14 +218,15 @@ type environment (boardWidth : int, NMooses : int, mooseRepLen : int, NWolves : 
       ret <- ret + "\n"
     ret
 
-(*
-let NewEnvironment = environment(10, 2, 15, 1, 7, 8, true)
+
+
+let NewEnvironment = environment(10, 2, 15, 1, 7, 3, true)
 //Dette kan køre, og viser hvordan ulve og elge bevæger sig rundt, samt reproduktion:
-for i = 0 to 10 do
+for i = 0 to 5 do
   NewEnvironment.tick()
-  printfn "%s" (NewEnvironment.ToString())
   for j = 0 to NewEnvironment.board.moose.Length-1 do
     printfn "Moose %i's RepLen: %A\nMoose %i's position: %A" j NewEnvironment.board.moose.[j].reproduction  j NewEnvironment.board.moose.[j].position
   for x = 0 to NewEnvironment.board.wolves.Length-1 do
-    printfn "Wolf %i's RepLen: %A\nWolf %i's position: %A" x NewEnvironment.board.wolves.[x].reproduction x NewEnvironment.board.wolves.[x].position
-*)
+    printfn "Wolf %i's Hunglen: %A\nWolf %i's position: %A" x NewEnvironment.board.wolves.[x].hunger x NewEnvironment.board.wolves.[x].position
+  printfn "%s" (NewEnvironment.ToString())
+
